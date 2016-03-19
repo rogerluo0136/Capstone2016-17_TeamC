@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Child as Child;
+use App\User as User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
@@ -40,6 +41,7 @@ class UserChildController extends Controller
      */
     public function store(Request $request,$userId)
     {   
+
         $this->validate($request, [
             'name' => 'required|max:255',
             'dob' => 'required|date_format:"Y-m-d"',
@@ -75,16 +77,25 @@ class UserChildController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the user child resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($userId,$childId)
+    public function edit($user_id,$child_id)
     {
-        //policy here that allows
-        //an admin or the user's guardian or parents to access this 
-        //function
+        //ensure that the authenticated user is
+        //the childs owner or is an administrator
+        $child = Child::findOrFail($child_id);
+        $user=$child->user;
+
+        //if the child owner does not match user_id, then abort
+        if($user->id != Auth::user()->id && Auth::user()->type!='admin'){
+            abort(403,'Unauthorized User');
+        }
+
+        return view('child.edit',compact('child'));
+        
     }
 
     /**
@@ -94,11 +105,32 @@ class UserChildController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $userId,$childId)
+    public function update(Request $request, $user_id,$child_id)
     {
         //policy here that allows
         //an admin or the user's guardian or parents to access this 
         //function
+        $child = Child::findOrFail($child_id);
+        $user=$child->user;
+
+        //if the child owner does not match user_id, then abort
+        if($user->id != Auth::user()->id && Auth::user()->type!='admin'){
+            abort(403,'Unauthorized User');
+        }
+
+        //validate the update information
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'dob' => 'required|date_format:"Y-m-d"',
+            'gender'=>'required',
+            'health_card'=>'numeric',
+            'languages'=>'required',
+            'lives_with'=>'required',
+            'fam_physician_name'=>'max:255',
+            'fam_physician_phone'=>'numeric'
+        ]);
+
+        Child::where('id',$child_id)->update($request->all());
     }
 
     /**

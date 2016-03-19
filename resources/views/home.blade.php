@@ -25,7 +25,7 @@
                         @foreach($user->childs as $child)
                         <tr>
                             <td>{{ $child->name }}</td>
-                            <td><a><button class="btn btn-default">View Info</button></a></td>
+                            <td><a href="{{URL::action('UserChildController@edit',[Auth::user()->id,$child->id])}}"><button class="btn btn-default">View Info</button></a></td>
                             <td><a><button class="btn btn-primary">List Courses</button></a></td>
                         </tr>
                         

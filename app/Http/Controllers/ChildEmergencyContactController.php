@@ -105,9 +105,37 @@ class ChildEmergencyContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $child_id,$contact_id)
+    {   
+        //ensure that the authenticated user has registered the 
+        //child under his account
+        $flag=Auth::user()->childs()->where('id','=',$child_id)->exists();
+
+        if(!$flag && Auth::user()->typ!='admin'){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        $child=Child::findOrFail($child_id);
+
+        if($child->emergencyContact->id !=$contact_id){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        $this->validate($request, [
+            'name'=>'required|max:255',
+            'relationship'=>'required|max:255',
+            'email'=>'required|email',
+            'street_address'=>'required|max:255',
+            'city'=>'required|max:255',
+            'province'=>'required|max:255',
+            'postal_code'=>'required|max:255',
+            'cell_phone'=>'required|digits:10',
+            'home_phone'=>'digits:10',
+        ]);
+
+        EmergencyContact::where('id',$contact_id)->update($request->all());
+
+
     }
 
     /**

@@ -14,7 +14,7 @@
 					<form class="form-horizontal" role="form" method="POST" action="{{ URL::action('ChildPainManagementController@store',[$child->id])}}">
                         {!! csrf_field() !!}
 
-                        <h3>Seozures</h3>
+                        <h3>Seizures</h3>
                         <div class="form-group{{ $errors->has('experiences_seizures') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Does your child encountered seizures previously? <span class="text-danger">*</span></label>
 
@@ -100,7 +100,7 @@
 
                         <h3>Pain Management</h3>
                         <div class="form-group{{ $errors->has('pain_indication') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">How does your child indicate pain</label>
+                            <label class="col-md-4 control-label">How does your child indicate pain <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <textarea row="4" class="form-control" name="pain_indication" value="{{ old('pain_indication') }}"/></textarea>
@@ -115,7 +115,7 @@
 
 
                         <div class="form-group{{ $errors->has('pain_alleviation') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">How can we alleviate your child's pain</label>
+                            <label class="col-md-4 control-label">How can we alleviate your child's pain <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <textarea row="4" class="form-control" name="pain_alleviation" value="{{ old('pain_alleviation') }}"/></textarea>
@@ -129,7 +129,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('pain_requirements') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Possible child requirements </label>
+                            <label class="col-md-4 control-label">Possible child requirements <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <div class="checkbox">
@@ -168,6 +168,7 @@
                                 </button>
                             </div>
                         </div>
+                    </form>
 				</div>
 			</div>
 		</div>

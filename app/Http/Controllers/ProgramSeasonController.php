@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\ProgramSeason as ProgramSeason;
 use App\Season as Season;
 use Auth;
+use Carbon\Carbon;
 
 class ProgramSeasonController extends Controller
 {
@@ -66,17 +67,17 @@ class ProgramSeasonController extends Controller
         if(!$flag && Auth::user()->type!='admin'){
             abort(403,'Unauthorized Access');
         }
-
+        
         $program=$season->programs()->findOrFail($program_id);
         
         // retrieve the status of the offered program.
         $status=$program->pivot->status;
+
         if($status!='on' && Auth::user()->type!='admin'){
             abort(403, 'Unauthorized Access');
         }
 
         $program_season=ProgramSeason::findOrFail($program->pivot->id);
-
 
         return view('program.season',compact('season','program','program_season'));
     }
