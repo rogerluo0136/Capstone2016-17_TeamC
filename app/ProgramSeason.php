@@ -12,4 +12,14 @@ class ProgramSeason extends Model
     {
     	return $this->hasMany('App\Schedule');
     }
+
+    public function program()
+    {
+    	return $this->belongsTo('App\Program');
+    }
+
+    public function season()
+    {
+    	return $this->belongsTo('App\Season');
+    }
 }

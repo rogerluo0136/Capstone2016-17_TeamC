@@ -55,13 +55,7 @@ class ChildPainManagementController extends Controller
             App::abort(403, 'Unauthorized action.');
         }
 
-        $data=[
-            'experiences_seizures'=>$request->input('experiences_seizures'),
-            'pain_indication'=>$request->input('pain_indication'),
-            'pain_alleviation'=>$request->input('pain_alleviation')
-        ];
-
-        $v=Validator::make($data,[
+        $v=Validator::make($request->all(),[
             'experiences_seizures'=>'required|in:yes,no',
             'pain_indication'=>'required',
             'pain_alleviation'=>'required',
@@ -116,9 +110,44 @@ class ChildPainManagementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $child_id,$pain_id)
     {
-        //
+        //ensure that either the child is registered under the
+        //authenticated user's account or the admin is the user
+        $flag=Auth::user()->childs()->where('id','=',$child_id)->exists();
+        if(!$flag && Auth::user()->typ!='admin'){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        //ensure allergy_id matches with what is
+        //being updated
+        $child=Child::findOrFail($child_id);
+        if($child->painManagement->id !=$pain_id){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        $v=Validator::make($request->all(),[
+            'experiences_seizures'=>'required|in:yes,no',
+            'pain_indication'=>'required',
+            'pain_alleviation'=>'required',
+            'pain_requirements'=>'in:suctioning-tip,suctioning-deep,physical-restraints,helmet'
+        ]);
+
+        $v->sometimes(['seizure_frequency','seizure_trigger','seizure_medication'],'required',function ($input){
+            return $input->experiences_seizures=='yes';
+        });
+
+        $v->sometimes(['last_seizure'],'required|date',function ($input){
+            return $input->experiences_seizures=='yes';
+        });
+
+        if($v->fails()){
+            //return Json with validation failure
+            return response()->json(
+                 $v->getMessageBag(), 422);
+        }
+
+        PainManagement::where('id',$pain_id)->update($request->all());
     }
 
     /**

@@ -43,8 +43,11 @@ Route::group(['middleware' => 'web'], function () {
         Route::resource('child.painmanagement','ChildPainManagementController');
         Route::resource('child.programseason','ChildProgramSeasonController');
         Route::resource('program.season','ProgramSeasonController');
-
+        Route::resource('transaction','TransactionController');
     	Route::get('/home', 'HomeController@index');
+
+        Route::post('/verify/child/info', 'ChildController@verify');
+
     });
     
 });

@@ -8,6 +8,6 @@ class Season extends Model
 {
     public function programs()
     {
-    	return $this->belongsToMany('App\Program');
+    	return $this->belongsToMany('App\Program')->withPivot('status','id','cost');;
     }
 }

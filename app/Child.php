@@ -37,4 +37,14 @@ class Child extends Model
         return $this->hasOne('App\PainManagement');
     }
 
+    public function programSeason()
+    {
+        return $this->belongsToMany('App\ProgramSeason','child_program_season','child_id','program_season_id');
+    }
+
+    public function checkups()
+    {
+        return $this->hasMany('App\Checkup');
+    }
+
 }

@@ -51,8 +51,7 @@ class ChildAllergyController extends Controller
     public function store(Request $request,$childId)
     {   
 
-        $data=['is_allergic'=>$request->input('is_allergic')];
-        $v=Validator::make($data,[
+        $v=Validator::make($request->all(),[
             'is_allergic'=>'required|in:yes,no'
         ]);
 
@@ -107,9 +106,41 @@ class ChildAllergyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $child_id,$allergy_id)
+    {   
+
+        //ensure that either the child is registered under the
+        //authenticated user's account or the admin is the user
+        $flag=Auth::user()->childs()->where('id','=',$child_id)->exists();
+        if(!$flag && Auth::user()->typ!='admin'){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        //ensure allergy_id matches with what is
+        //being updated
+        $child=Child::findOrFail($child_id);
+        if($child->allergy->id !=$allergy_id){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        //validate the update before updating
+        //the database
+        $v=Validator::make($request->all(),[
+            'is_allergic'=>'required|in:yes,no'
+        ]);
+
+        $v->sometimes(['allergy','symptoms','treatment'],'required',function($input){
+            return $input->is_allergic=='yes';
+        });
+
+        if($v->fails()){
+            //return Json with validation failure
+            return response()->json(
+                 $v->getMessageBag(), 422); // 400 being the HTTP code for an invalid request.
+        }
+
+        //update the record in the database
+        Allergy::where('id',$allergy_id)->update($request->all());
     }
 
     /**

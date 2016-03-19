@@ -274,7 +274,7 @@
                             <div class="col-md-6">
                                 <div class="radio">
 								  <label>
-								    <input type="radio" name="communication_means" value="Verbally"> Verbally
+								    <input type="radio" name="communication_means" value="verbally"> Verbally
 								  </label>
 								</div>
 								<div class="radio">
@@ -523,7 +523,7 @@
                                 </button>
                             </div>
                         </div>
-
+                    </form>
 				</div>
 			</div>
 

@@ -54,31 +54,7 @@ class ChildSpecialNeedController extends Controller
             App::abort(403, 'Unauthorized action.');
         }
         
-        $data=[
-            'requires_orthotics'=>$request->input('requires_orthotics'),
-            'mobility_support'=>$request->input('mobility_support'),
-            'risk_of_falling'=>$request->input('risk_of_falling'),
-            'hand_over_hand_assisstance'=>$request->input('hand_over_hand_assisstance'),
-            'toiletting_assisstance'=>$request->input('toiletting_assisstance'),
-            'eating_assisstance'=>$request->input('eating_assisstance'),
-            'communication_assisstance'=>$request->input('communication_assisstance'),
-            'communication_means'=>$request->input('communication_means'),
-            'communicates_yes'=>$request->input('communicates_yes'),
-            'communicates_no'=>$request->input('communicates_no'),
-            'weight'=>$request->input('weight'),
-
-            'overwhelm_noise'=>$request->input('overwhelm_noise'),
-            'overwhelm_people'=>$request->input('overwhelm_people'),
-            'leaves_group'=>$request->input('leaves_group'),
-            'harm_others'=>$request->input('harm_others'),
-            'harm_self'=>$request->input('harm_self'),
-            'successful_participation'=>$request->input('successful_participation'),
-            'trigger'=>$request->input('trigger'),
-            'major_change'=>$request->input('major_change'),
-            'activities'=>$request->input('activities'),
-        ];
-
-        $v=Validator::make($data,[
+        $v=Validator::make($request->all(),[
             'requires_orthotics'=>'required|in:yes,no',
             'mobility_support'=>'required',
             'risk_of_falling'=>'required|in:yes,no',
@@ -155,9 +131,70 @@ class ChildSpecialNeedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $child_id, $sn_id)
     {
-        //
+        //ensure that either the child is registered under the
+        //authenticated user's account or the admin is the user
+        $flag=Auth::user()->childs()->where('id','=',$child_id)->exists();
+        if(!$flag && Auth::user()->typ!='admin'){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        //ensure allergy_id matches with what is
+        //being updated
+        $child=Child::findOrFail($child_id);
+        if($child->specialNeed->id !=$sn_id){
+            App::abort(403, 'Unauthorized action.');
+        }
+
+        $v=Validator::make($request->all(),[
+            'requires_orthotics'=>'required|in:yes,no',
+            'mobility_support'=>'required',
+            'risk_of_falling'=>'required|in:yes,no',
+            'hand_over_hand_assisstance'=>'required|in:yes,no',
+            'toiletting_assisstance'=>'required|in:yes,no',
+            'eating_assisstance'=>'required|in:yes,no',
+            'communication_assisstance'=>'required|in:yes,no',
+            'communication_means'=>'required|in:verbally,gestures,device,pictures',
+            'communicates_yes'=>'required',
+            'communicates_no'=>'required',
+            'weight'=>'required|numeric',
+
+            'overwhelm_noise'=>'required|in:yes,no',
+            'overwhelm_people'=>'required|in:yes,no',
+            'leaves_group'=>'required|in:yes,no',
+            'harm_others'=>'required|in:yes,no',
+            'harm_self'=>'required|in:yes,no',
+            'successful_participation'=>'required|in:yes,no',
+            'trigger'=>'required',
+            'major_change'=>'required',
+            'activities'=>'required',
+
+        ]);
+
+        $v->sometimes('orthotics_when','required',function ($input){
+            return $input->requires_orthotics=='yes';
+        });
+
+        $v->sometimes('toiletting_details','required',function ($input){
+            return $input->toiletting_assisstance=='yes';
+        });
+
+        $v->sometimes('eating_details','required',function ($input){
+            return $input->eating_assisstance=='yes';
+        });
+
+        if($v->fails()){
+            //return Json with validation failure
+            return response()->json(
+                 $v->getMessageBag(), 422); // 400 being the HTTP code for an invalid request.
+        }
+
+        SpecialNeed::where('id',$sn_id)->update($request->all());
+
+
+
+
     }
 
     /**
