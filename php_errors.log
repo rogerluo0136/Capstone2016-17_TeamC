@@ -1,0 +1,28 @@
+[10-Mar-2016 21:18:48 UTC] PHP Warning:  require(/home/ubuntu/workspace/vendor/psy/psysh/src/Psy/functions.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/vendor/composer/autoload_real.php on line 55
+[10-Mar-2016 21:18:48 UTC] PHP Stack trace:
+[10-Mar-2016 21:18:48 UTC] PHP   1. {main}() /home/ubuntu/workspace/public/index.php:0
+[10-Mar-2016 21:18:48 UTC] PHP   2. require() /home/ubuntu/workspace/public/index.php:22
+[10-Mar-2016 21:18:48 UTC] PHP   3. require() /home/ubuntu/workspace/bootstrap/autoload.php:17
+[10-Mar-2016 21:18:48 UTC] PHP   4. ComposerAutoloaderInit62f58575c84085834318f1f293ed097e::getLoader() /home/ubuntu/workspace/vendor/autoload.php:7
+[10-Mar-2016 21:18:48 UTC] PHP   5. composerRequire62f58575c84085834318f1f293ed097e() /home/ubuntu/workspace/vendor/composer/autoload_real.php:45
+[10-Mar-2016 21:18:48 UTC] PHP Fatal error:  require(): Failed opening required '/home/ubuntu/workspace/vendor/psy/psysh/src/Psy/functions.php' (include_path='.:/usr/share/php:/usr/share/pear') in /home/ubuntu/workspace/vendor/composer/autoload_real.php on line 55
+[10-Mar-2016 21:18:48 UTC] PHP Stack trace:
+[10-Mar-2016 21:18:48 UTC] PHP   1. {main}() /home/ubuntu/workspace/public/index.php:0
+[10-Mar-2016 21:18:48 UTC] PHP   2. require() /home/ubuntu/workspace/public/index.php:22
+[10-Mar-2016 21:18:48 UTC] PHP   3. require() /home/ubuntu/workspace/bootstrap/autoload.php:17
+[10-Mar-2016 21:18:48 UTC] PHP   4. ComposerAutoloaderInit62f58575c84085834318f1f293ed097e::getLoader() /home/ubuntu/workspace/vendor/autoload.php:7
+[10-Mar-2016 21:18:48 UTC] PHP   5. composerRequire62f58575c84085834318f1f293ed097e() /home/ubuntu/workspace/vendor/composer/autoload_real.php:45
+[10-Mar-2016 21:20:00 UTC] PHP Warning:  require(/home/ubuntu/workspace/vendor/psy/psysh/src/Psy/functions.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/vendor/composer/autoload_real.php on line 55
+[10-Mar-2016 21:20:01 UTC] PHP Stack trace:
+[10-Mar-2016 21:20:01 UTC] PHP   1. {main}() /home/ubuntu/workspace/public/index.php:0
+[10-Mar-2016 21:20:01 UTC] PHP   2. require() /home/ubuntu/workspace/public/index.php:22
+[10-Mar-2016 21:20:01 UTC] PHP   3. require() /home/ubuntu/workspace/bootstrap/autoload.php:17
+[10-Mar-2016 21:20:01 UTC] PHP   4. ComposerAutoloaderInit62f58575c84085834318f1f293ed097e::getLoader() /home/ubuntu/workspace/vendor/autoload.php:7
+[10-Mar-2016 21:20:01 UTC] PHP   5. composerRequire62f58575c84085834318f1f293ed097e() /home/ubuntu/workspace/vendor/composer/autoload_real.php:45
+[10-Mar-2016 21:20:01 UTC] PHP Fatal error:  require(): Failed opening required '/home/ubuntu/workspace/vendor/psy/psysh/src/Psy/functions.php' (include_path='.:/usr/share/php:/usr/share/pear') in /home/ubuntu/workspace/vendor/composer/autoload_real.php on line 55
+[10-Mar-2016 21:20:01 UTC] PHP Stack trace:
+[10-Mar-2016 21:20:01 UTC] PHP   1. {main}() /home/ubuntu/workspace/public/index.php:0
+[10-Mar-2016 21:20:01 UTC] PHP   2. require() /home/ubuntu/workspace/public/index.php:22
+[10-Mar-2016 21:20:01 UTC] PHP   3. require() /home/ubuntu/workspace/bootstrap/autoload.php:17
+[10-Mar-2016 21:20:01 UTC] PHP   4. ComposerAutoloaderInit62f58575c84085834318f1f293ed097e::getLoader() /home/ubuntu/workspace/vendor/autoload.php:7
+[10-Mar-2016 21:20:01 UTC] PHP   5. composerRequire62f58575c84085834318f1f293ed097e() /home/ubuntu/workspace/vendor/composer/autoload_real.php:45
