@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Season as Season;
+use Auth;
 
 class SeasonController extends Controller
 {
@@ -25,7 +27,10 @@ class SeasonController extends Controller
      */
     public function create()
     {
-        //
+        if(Auth::user()->type!='admin'){
+            abort(403, 'Unauthorized Access');
+        }
+        return view('admin.season');
     }
 
     /**
@@ -36,7 +41,22 @@ class SeasonController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Auth::user()->type!='admin'){
+            abort(403, 'Unauthorized Access');
+        }
+        
+        $this->validate($request,[
+            'season'=>'required',
+            'year'=>'required|numeric',
+            'start'=>'required|date|after:tomorrow',
+            'end'=>'required|date|after:start',
+            'weeks'=>'required|numeric',
+            'active'=>'required'
+        ]);
+        
+        $season= Season::create($request->all());
+        
+        return redirect('/admin');
     }
 
     /**

@@ -74,7 +74,7 @@ class ChildPainManagementController extends Controller
             return redirect()->back()->withErrors($v)->withInput();
         }
 
-        $pain_management=new PainManagement(Input::all());
+        $pain_management=new PainManagement($request->all());
         $pain_management->child_id=$childId;
         $pain_management->save();
 

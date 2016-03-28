@@ -6,15 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <title>Laravel</title>
+    <title>Holland Bloorview Music & Arts</title>
 
     <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700" rel='stylesheet' type='text/css'>
-
+    <link href='https://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
+    
+    <link href="{{asset('css/home.css')}}" rel="stylesheet">
+    @yield('css')
 
     <style>
         body {
@@ -27,6 +30,7 @@
     </style>
 </head>
 <body id="app-layout">
+    <div id="body-filter"></div>
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
@@ -40,9 +44,9 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Laravel
-                </a>
+                
+                    <b  class="navbar-brand">Holland Bloorview</b>
+                
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -75,6 +79,28 @@
 
     @yield('content')
 
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-4">
+                    <h4><b><a href="#">Contact</a></b></h4>
+                    <span class="glyphicon glyphicon-user"></span> Name:John Doe <br>
+                    <span class="glyphicon glyphicon-envelope"></span> Email:admin@example.com <br>
+                    <span class="glyphicon glyphicon-phone-alt"></span> Tel: 123456798 <br>
+                </div>
+                
+                <div class="col-xs-12 col-md-4">
+                    <h4><b><a href="#">Privacy Policy</a></b></h4>
+                </div>
+                
+                <div class="col-xs-12 col-md-4">
+                    <h4><b><a href="#">About Us</a></b></h4>
+                </div>
+                
+            </div>
+        </div>
+        
+    </footer>
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

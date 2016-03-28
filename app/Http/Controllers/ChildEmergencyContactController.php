@@ -68,7 +68,7 @@ class ChildEmergencyContactController extends Controller
             App::abort(403, 'Unauthorized action.');
         }
         
-        $emergencyContact=new EmergencyContact(Input::all());
+        $emergencyContact=new EmergencyContact($request->all());
         $emergencyContact->child_id=$childId;
 
         $emergencyContact->save();

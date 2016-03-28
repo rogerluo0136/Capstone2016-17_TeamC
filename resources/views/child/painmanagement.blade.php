@@ -16,7 +16,7 @@
 
                         <h3>Seizures</h3>
                         <div class="form-group{{ $errors->has('experiences_seizures') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Does your child encountered seizures previously? <span class="text-danger">*</span></label>
+                            <label class="col-md-4 control-label">Has your child encountered seizures previously? <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 
@@ -129,7 +129,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('pain_requirements') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Possible child requirements <span class="text-danger">*</span></label>
+                            <label class="col-md-4 control-label">Possible child requirements <span class="text-danger"></span></label>
 
                             <div class="col-md-6">
                                 <div class="checkbox">

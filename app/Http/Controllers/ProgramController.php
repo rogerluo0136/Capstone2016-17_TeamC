@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Program as Program;
+use Auth;
 
 class ProgramController extends Controller
 {
@@ -25,7 +27,10 @@ class ProgramController extends Controller
      */
     public function create()
     {
-        //
+        if(Auth::user()->type!='admin'){
+            abort(403, 'Unauthorized Access');
+        }
+        return view('admin.program');
     }
 
     /**
@@ -36,7 +41,23 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Auth::user()->type!='admin'){
+            abort(403, 'Unauthorized Access');
+        }
+        
+        $this->validate($request,[
+            'name'=>'required',
+            'category'=>'required',
+            'min_age'=>'required|numeric',
+            'max_age'=>'required|numeric',
+            'type'=>'required',
+            'months_since_checkup'=>'numeric',
+            'description'=>'string|max:255'
+        ]);
+        
+        $program= Program::create($request->all());
+        
+        return redirect('/admin');
     }
 
     /**

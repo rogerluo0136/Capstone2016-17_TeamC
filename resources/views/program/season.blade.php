@@ -2,62 +2,45 @@
 
 @section('content')
 <div class="container">
+	<div class="panel panel-default padder">
 	<div class="row">
 		<div class="col-xs-12">
+			
 
-			<h3>{{ strtoupper($program->name) }}</h3>
-			<p>{{ $program->description }}
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</p>
+			<h3 class="text-center">{{ strtoupper($program->name) }}</h3>
+			<p>{{ $program->description }}</p>
 
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12 col-md-5 ">
+		<div class="col-xs-12 ">
 			<h3>Program Details</h3>
 			<table class="table">
 				<tr>
 					<th>Category</th>
 					<th>Season</th>
-					<th>Deadline</th>
+					<th>Start Date</th>
 					<th>Cost</th>
+					<th>min age</th>
+					<th>max age</th>
 					<th>Type</th>
 				</tr>
 				<tr>
 					<td>{{ $program->category}}</td>
 					<td>{{ $season->season }}</td>
-					<td>{{ $season->start }}</td>
-					<td>{{ $program_season->cost}}</td>
+					<td>{{ $season->start->toFormattedDateString() }}</td>
+					<td>{{ $program_season->cost }}</td>
+					<td>{{ $program->min_age }}</td>
+					<td>{{ $program->max_age }}</td>
 					<td>{{ $program->type }}</td>
 
 				</tr>
 			</table>
 		</div>
-		<div class="col-xs-12 col-md-5 col-md-offset-2">
-
-			<h3>Schedule</h3>
-			<table class="table">
-				<tr>
-					<th>Day</th>
-					<th>Start Time</th>
-					<th>End Time</th>
-				</tr>
-				@foreach($program_season->schedules as $schedule)
-				<tr>
-					<td>{{ $schedule->day }}</td>
-					<td>{{ $schedule->start_time }}</td>
-					<td>{{ $schedule->end_time }}</td>
-				</tr>
-				@endforeach
-			</table>
-		</div>
+		
 	</div>
 	<div class="row">
+		<div class="col-xs-12 ">
 			<form class="form" role="form" method="POST" action="{{ URL::action('ChildController@verify')}}">
 				{!! csrf_field() !!}
 				<input type="hidden" name="program_season_id" value="{{$program_season->id}}">
@@ -67,21 +50,30 @@
 
 
                     <div class="col-md-12">
-                		@forelse(Auth::user()->childs as $child)
-                			
-                		<div class="checkbox">
-						  <label>
-						    <input type="checkbox" name="program_child[]" value="{{$child->id}}">
-						    {{$child->name}}
-						  </label>
-						</div>
-
+                    	<?php $flag=false; ?>
+                		@forelse($children as $child)
+                			 @if($child->dob->age>=$program->min_age && $child->dob->age<=$program->max_age)
+		                		<div class="checkbox">
+								  <label>
+								    <input type="checkbox" name="program_child[]" value="{{$child->id}}">
+								    {{$child->name}}
+								  </label>
+								</div>
+								<?php $flag=true; ?>
+							@endif
                 		@empty
                 		<p>
-                			You still have no child registered under your account. Please head back to the home page
-                			to do so.
+                			You still have no child registered under your account or have registered all your children to this program already.
+                			To register a new child please go back to the <a href="{{url('/home')}}"><b>home</b></a> page.
                 		</p>
                 		@endforelse
+                		
+                		@if(!$flag)
+                		<p>
+                			You have no unregistered children under your account that meet the age requirements of the program.
+                			Click <a href="{{url('/home')}}"><b>here</b></a> to go back to the home page.
+                		</p>
+                		@endif
                 	</div>
                 </div>
 
@@ -96,10 +88,11 @@
                 @endif
                         
 			</form>
+			</div>
 		</div>
 	</div>
 	
-
+</div>
 
 </div>
 @endsection

@@ -5,13 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class Child extends Model
-{
+{   
+    
 	public $table = "childs";
 
 	protected $fillable = [
         'name', 'dob', 'gender','health_card','fam_physician_name','fam_physician_phone','languages','lives_with'
     ];
-
+    
+    protected $dates=[
+        'created_at','updated_at','dob'
+    ];
+    
     public function user()
     {
     	return $this->belongsTo('App\User');
@@ -45,6 +50,10 @@ class Child extends Model
     public function checkups()
     {
         return $this->hasMany('App\Checkup');
+    }
+    
+    public function childProgramSeason(){
+        return $this->hasMany('App\ChildProgramSeason');
     }
 
 }

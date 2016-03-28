@@ -1,0 +1,74 @@
+html {
+    position: relative;
+    min-height: 100%;
+    
+}
+
+body{
+    background-image: url("/images/congruent_pentagon.png");
+    margin-bottom: 160px;
+}
+
+.navbar-brand{
+    color:#774EC7 !important;
+}
+
+.navbar{
+    border-bottom: 2px solid #774EC7;
+}
+.container{
+    z-index:100;
+}
+
+#body-filter{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    opacity:0.5;
+    background-color:#4A00D6;
+    
+    z-index:-100;
+}
+
+footer{
+    position:absolute;
+    margin-top: 3%;
+    background-color: #333333;
+    color:white;
+    
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height:125px;
+    z-index:100;
+}
+
+#welcome-greeting{
+    color:#F5EDDC;
+    font-size: 1.3em;
+    padding-right:15%;
+    padding-left:15%;
+    padding-top:10%;
+    margin-top:5%;
+}
+
+#brand {
+    letter-spacing: 3px;
+    font-size:3em;
+}
+
+.marginer{
+    margin:1%;
+}
+
+.home-button{
+    width:120px;
+    height:40px;
+}
+
+.padder{
+    padding:2% !important;
+}
+

@@ -83,7 +83,20 @@
                                 @endif
                             </div>
                         </div>
+                        
+                        <div class="form-group{{ $errors->has('medication') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Does your child carry an Epipen?</label>
 
+                            <div class="col-md-6">
+                                <label class="radio-inline">
+    							  <input type="radio" name="epipen"  value="yes">yes
+    							</label>
+    							<label class="radio-inline">
+    							  <input type="radio" name="epipen" value="no">no
+    							</label>
+                            </div>
+                        </div>
+                        
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary pull-right">

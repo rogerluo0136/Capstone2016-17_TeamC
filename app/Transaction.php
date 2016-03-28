@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $fillable=[
-    	'user_id','amount','transaction_type','program_season_id','child_id'
+    	'user_id','child_program_season_id','amount','transaction_type','charge_id'
     ];
 
     public function user(){
     	return $this->belongsTo('App\User');
     }
 
-    public function program_season(){
-    	return $this->belongsTo('App\ProgramSeason');
+    public function child_program_season(){
+    	return $this->belongsTo('App\ChildProgramSeason');
     }
 
     

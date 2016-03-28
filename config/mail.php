@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'fake@hollandbloorview.com', 'name' => 'Hollan Bloorview Hospital'],
 
     /*
     |--------------------------------------------------------------------------

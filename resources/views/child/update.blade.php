@@ -21,7 +21,7 @@
                             <label class="col-md-4 control-label">Date of Birth <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
-                                <input type="date" class="form-control" name="dob" value="{{ $child->dob }}" required>
+                                <input type="date" class="form-control" name="dob" value="{{ $child->dob->toDateString() }}" required>
 
                                 @if ($errors->has('dob'))
                                     <span class="help-block">
@@ -390,6 +390,19 @@
                                         <strong>{{ $errors->first('medication') }}</strong>
                                     </span>
                                 @endif
+                            </div>
+                        </div>
+                        
+                        <div class="form-group{{ $errors->has('medication') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Does your child carry an Epipen?</label>
+
+                            <div class="col-md-6">
+                                <label class="radio-inline">
+    							  <input type="radio" name="epipen"  value="yes"{{ $allergy->epipen=="yes" ? ' checked' : "" }}>yes
+    							</label>
+    							<label class="radio-inline">
+    							  <input type="radio" name="epipen"  value="no"{{ $allergy->epipen=="no" ? ' checked' : "" }}>no
+    							</label>
                             </div>
                         </div>
 
@@ -952,7 +965,7 @@
 
                         <h3>Seizures</h3>
                         <div class="form-group{{ $errors->has('experiences_seizures') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Does your child encountered seizures previously? <span class="text-danger">*</span></label>
+                            <label class="col-md-4 control-label">Has your child encountered seizures previously? <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 
@@ -1065,7 +1078,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('pain_requirements') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Possible child requirements <span class="text-danger">*</span></label>
+                            <label class="col-md-4 control-label">Possible child requirements <span class="text-danger"></span></label>
 
                             <div class="col-md-6">
                                 <div class="checkbox">

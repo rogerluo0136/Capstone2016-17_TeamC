@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddMonthsSinceCheckup extends Migration
+class AddEpipen extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddMonthsSinceCheckup extends Migration
      */
     public function up()
     {
-        Schema::table('programs', function (Blueprint $table) {
-            $table->integer('months_since_checkup')->unsigned()->nullable();//max months since last checkup
+        Schema::table('allergies', function (Blueprint $table) {
+            $table->string('epipen')->default('no');
         });
     }
 
@@ -24,8 +24,8 @@ class AddMonthsSinceCheckup extends Migration
      */
     public function down()
     {
-        Schema::table('programs', function (Blueprint $table) {
-            
+        Schema::table('allergies', function (Blueprint $table) {
+            //
         });
     }
 }

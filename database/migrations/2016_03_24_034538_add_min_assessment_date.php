@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddMonthsSinceCheckup extends Migration
+class AddMinAssessmentDate extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class AddMonthsSinceCheckup extends Migration
      */
     public function up()
     {
-        Schema::table('programs', function (Blueprint $table) {
+         Schema::table('programs', function (Blueprint $table) {
             $table->integer('months_since_checkup')->unsigned()->nullable();//max months since last checkup
         });
     }
@@ -25,7 +25,7 @@ class AddMonthsSinceCheckup extends Migration
     public function down()
     {
         Schema::table('programs', function (Blueprint $table) {
-            
+            //
         });
     }
 }
