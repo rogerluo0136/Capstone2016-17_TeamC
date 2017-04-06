@@ -1,4 +1,4 @@
-$(function(){ 
+$(document).ready(function(){ 
 	$('form.updatePanel').submit(function(event){
 		event.preventDefault();
 		//capture the form instance being submitted
@@ -59,3 +59,6 @@ $(function(){
   		
 	});
 });
+
+
+

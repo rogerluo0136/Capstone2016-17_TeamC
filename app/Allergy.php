@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Allergy extends Model
 {	
 	protected $fillable = [
-        'is_allergic', 'allergy', 'symptoms','treatment','medication','epipen'
+        'has_allergy','allergy_type_symptom','allergy_explaination','has_medication','medication_explaination'
     ];
 
     public function child(){

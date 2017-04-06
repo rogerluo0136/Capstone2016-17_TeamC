@@ -1,34 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
+<center>
+    <h1>Welcome!</h1>
+    <p class="lead" style="width:50%">
+        Please fill in the following information to get started!
+    </p>
+</center>
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+                <div class="panel-heading">Sign Up</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                         {!! csrf_field() !!}
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Name</label>
+                        <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input type="text" class="form-control registrateForm" name="username" placeholder="Username" value="{{ old('username') }}">
 
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
+                                <a href="#"  data-toggle="popover" data-trigger="hover" data-content="No restrictions on usernames">
+                                    <span class="glyphicon glyphicon-question-sign"></span></a>
 
-                                @if ($errors->has('name'))
+                                @if ($errors->has('username'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('username') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input type="email" class="form-control registrateForm" name="email" placeholder="E-Mail Address" value="{{ old('email') }}">
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -38,25 +43,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Phone Number</label>
-
-                            <div class="col-md-6">
-                                <input type="tel" class="form-control" name="phone" value="{{ old('phone') }}">
-
-                                @if ($errors->has('phone'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('phone') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Password</label>
+                            <div class="col-md-10 col-md-offset-1">
+                                <input type="password" class="form-control registrateForm" name="password" placeholder="Password">
 
-                            <div class="col-md-6">
-                                <input type="password" class="form-control" name="password">
+                                <a href="#"  data-toggle="popover" data-trigger="hover" data-content="6 digits minimum, no other restrictions">
+                                    <span class="glyphicon glyphicon-question-sign"></span></a>
+
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -67,10 +60,8 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Confirm Password</label>
-
-                            <div class="col-md-6">
-                                <input type="password" class="form-control" name="password_confirmation">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input type="password" class="form-control registrateForm" name="password_confirmation" placeholder="Confirm Password">
 
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
@@ -90,6 +81,13 @@
                     </form>
                 </div>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    Already have an account? &nbsp &nbsp<a href="{{ url('/login') }}" class="btn btn-primary" role="button"><i class="fa fa-btn fa-sign-in"></i>Login</a>
+                </div>
+            </div>      
+
         </div>
     </div>
 </div>

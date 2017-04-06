@@ -16,4 +16,9 @@ class Season extends Model
     {
     	return $this->belongsToMany('App\Program')->withPivot('status','id','cost');;
     }
+    
+    public function program_seasons()
+    {
+        return $this->hasMany('App\ProgramSeason');
+    }
 }

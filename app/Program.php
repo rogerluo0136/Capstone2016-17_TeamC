@@ -15,4 +15,6 @@ class Program extends Model
     {
     	return $this->belongsToMany('App\Season');
     }
+    
+    
 }

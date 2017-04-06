@@ -15,7 +15,7 @@ use Storage;
 class ChildProgramSeasonController extends Controller
 {
     /**
-     * Display a listing of the Programs that chld has registered for.
+     * Display a listing of the Programs that child has registered for.
      *
      * @return \Illuminate\Http\Response
      */
@@ -35,7 +35,7 @@ class ChildProgramSeasonController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created child registration record in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -78,37 +78,11 @@ class ChildProgramSeasonController extends Controller
 
         //insert the children records into the database
         foreach($program_child_ids as $id){
-            
             //retrieve the last passed checkup
             $child=Child::findOrFail($id);
-            $checkup=$child->checkups()
-                             ->where('passed','like','yes')
-                             ->orderBy('updated_at', 'desc')
-                             ->first();
-                             
-            $last_attended=$child->programSeason()
-                     ->whereHas('program',function($query) use($program){
-                        $query->where('category','like',$program->category)->whereNotNull('months_since_checkup');
-                     })
-                     ->orderBy('season_id', 'desc')
-                     ->first();
             
-            if(is_null($program->months_since_checkup)){
-                
-                //if there are no program checkup requirements, then invite to the program
-                $insert_input=['child_id'=>$id,'program_season_id'=>$program_season_id,'status'=>'invited'];
-                $update_input=['status'=>'invited'];
-                
-                if(ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->exists()){
-                    ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->update($update_input);
-                }else{
-                    ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->insert($insert_input);
-                }
-            }
-            elseif(is_null($checkup) && is_null($last_attended)){
-                
-                //if no record was found, then register child status as 'inquired'
-                $flag=false;
+            if($program_season->season->first()->season == 'Summer' || $program_season->season->first()->season == 'summer')
+            {
                 $insert_input=['child_id'=>$id,'program_season_id'=>$program_season_id,'status'=>'inquired'];
                 $update_input=['status'=>'inquired'];
                 
@@ -117,24 +91,25 @@ class ChildProgramSeasonController extends Controller
                 }else{
                     ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->insert($insert_input);
                 }
-            }else{
-                //check when the last time a check up was done
-                //and compare with program requirements. if the child
-                //passes the requirements register him as invited,else
-                //register him as inquired.
-                $now=Carbon::now();
+            }
+            
+            else
+            {
+                $checkup=$child->checkups()
+                                 ->where('passed','like','yes')
+                                 ->orderBy('updated_at', 'desc')
+                                 ->first();
+                                 
+                $last_attended=$child->programSeason()
+                         ->whereHas('program',function($query) use($program){
+                            $query->where('category','like',$program->category)->whereNotNull('months_since_checkup');
+                         })
+                         ->orderBy('season_id', 'desc')
+                         ->first();
                 
-                //retrieve most up to date 
-                if($checkup && $last_attended)
-                    $updated_at=$checkup->updated_at->max($last_attended->season->start);
-                elseif($checkup)
-                    $updated_at=$checkup->updated_at;
-                else
-                    $updated_at=$last_attended->season->start;
-                
-                //$updated_at=max($last_attended->season()->start, date($checkup->updated_at));
-                
-                if($updated_at->gt($now->subMonths($program->months_since_checkup))){
+                if(is_null($program->months_since_checkup)){
+                    
+                    //if there are no program checkup requirements, then invite to the program
                     $insert_input=['child_id'=>$id,'program_season_id'=>$program_season_id,'status'=>'invited'];
                     $update_input=['status'=>'invited'];
                     
@@ -143,9 +118,10 @@ class ChildProgramSeasonController extends Controller
                     }else{
                         ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->insert($insert_input);
                     }
+                }
+                elseif(is_null($checkup) && is_null($last_attended)){
                     
-                }else{
-
+                    //if no record was found, then register child status as 'inquired'
                     $flag=false;
                     $insert_input=['child_id'=>$id,'program_season_id'=>$program_season_id,'status'=>'inquired'];
                     $update_input=['status'=>'inquired'];
@@ -155,8 +131,47 @@ class ChildProgramSeasonController extends Controller
                     }else{
                         ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->insert($insert_input);
                     }
+                }else{
+                    //check when the last time a check up was done
+                    //and compare with program requirements. if the child
+                    //passes the requirements register him as invited,else
+                    //register him as inquired.
+                    $now=Carbon::now();
+                    
+                    //retrieve most up to date 
+                    if($checkup && $last_attended)
+                        $updated_at=$checkup->updated_at->max($last_attended->season->start);
+                    elseif($checkup)
+                        $updated_at=$checkup->updated_at;
+                    else
+                        $updated_at=$last_attended->season->start;
+                    
+                    //$updated_at=max($last_attended->season()->start, date($checkup->updated_at));
+                    
+                    if($updated_at->gt($now->subMonths($program->months_since_checkup))){
+                        $insert_input=['child_id'=>$id,'program_season_id'=>$program_season_id,'status'=>'invited'];
+                        $update_input=['status'=>'invited'];
+                        
+                        if(ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->exists()){
+                            ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->update($update_input);
+                        }else{
+                            ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->insert($insert_input);
+                        }
+                        
+                    }else{
+    
+                        $flag=false;
+                        $insert_input=['child_id'=>$id,'program_season_id'=>$program_season_id,'status'=>'inquired'];
+                        $update_input=['status'=>'inquired'];
+                        
+                        if(ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->exists()){
+                            ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->update($update_input);
+                        }else{
+                            ChildProgramSeason::where([['child_id',$id],['program_season_id',$program_season_id]])->insert($insert_input);
+                        }
+                    }
                 }
-            } 
+            }
         }
         
 
@@ -165,7 +180,7 @@ class ChildProgramSeasonController extends Controller
             $price=$children->count() * $program_season->cost; 
             $minprice=$children->count() * $program_season->minimum_amount;
             
-            return view('checkout',compact('children','price','program_season','minprice'));
+            return view('paymentmethod',compact('children','price','program_season','minprice'));
         }else{
     //
             return view('checkoutMessage');
@@ -173,7 +188,7 @@ class ChildProgramSeasonController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified child registration record.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -195,15 +210,19 @@ class ChildProgramSeasonController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified child registration record in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $child_id, $programSeason_id)
     {
-        //
+        ChildProgramSeason::where([
+                ['child_id', $child_id],
+                ['program_season_id', $programSeason_id]
+            ])
+            ->update(['status' => $request->input("status")]);
     }
 
     /**
@@ -218,7 +237,7 @@ class ChildProgramSeasonController extends Controller
     }
     
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified child registration record from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

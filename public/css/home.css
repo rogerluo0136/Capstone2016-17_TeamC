@@ -72,3 +72,35 @@ footer{
     padding:2% !important;
 }
 
+.long-description{
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    
+}
+
+/* added stuff*/
+h1{
+    font-weight: bolder;
+}
+
+.navbar-default .navbar-nav>li>a{
+    font-size: large;
+}
+
+.panel-heading{
+    font-weight: bold;
+}
+
+.registrateForm{
+    width: 90% !important;
+    float: left;
+
+}
+
+.jumbotron{
+    padding-top: 5px;
+    padding-bottom: 5px; 
+}
+

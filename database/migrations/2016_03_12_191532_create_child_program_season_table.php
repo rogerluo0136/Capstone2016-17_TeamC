@@ -17,6 +17,7 @@ class CreateChildProgramSeasonTable extends Migration
             $table->integer('child_id')->unsigned();
             $table->integer('program_season_id')->unsigned();
             $table->string('status');
+            $table->boolean('funded')->default(false);
             $table->timestamps();
         });
     }

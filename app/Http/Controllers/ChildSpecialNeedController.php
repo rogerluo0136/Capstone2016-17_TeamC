@@ -24,81 +24,110 @@ class ChildSpecialNeedController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new special need.
      *
      * @return \Illuminate\Http\Response
      */
     public function create($childId)
     {
-        $flag=Auth::user()->childs()->where('id',$childId)->exists();
+       //old flag
+       //$flag=Auth::user()->childs()->where('id',$childId)->exists();
+        $flag= session('id')!=null ;
 
         if(!$flag){
             App::abort(403, 'Unauthorized action.');
         }
-        $child=Child::findOrFail($childId);
+        $child=Child::findOrFail((int)$childId-1);
 
         return view('child.specialneed',compact('child'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created special need in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request,$childId)
     {
-        $flag=Auth::user()->childs()->where('id',$childId)->exists();
+        //old flag
+        //$flag=Auth::user()->childs()->where('id',$childId)->exists();
+        $flag= session('id')!=null ;
+
+// dd($request); 
 
         if(!$flag){
             App::abort(403, 'Unauthorized action.');
         }
         
-        $v=Validator::make($request->all(),[
-            'requires_orthotics'=>'required|in:yes,no',
-            'mobility_support'=>'required',
-            'risk_of_falling'=>'required|in:yes,no',
-            'hand_over_hand_assisstance'=>'required|in:yes,no',
-            'toiletting_assisstance'=>'required|in:yes,no',
-            'eating_assisstance'=>'required|in:yes,no',
-            'communication_assisstance'=>'required|in:yes,no',
-            'communication_means'=>'required|in:verbally,gestures,device,pictures',
-            'communicates_yes'=>'required',
-            'communicates_no'=>'required',
-            'weight'=>'required|numeric',
+        $request['communication_means']= implode(',', $request['communication_means']);
+        session(['special_need'=> $request->except('_token')]);
+        
+ //dd(session('special_need'));
 
+        $v=Validator::make($request->all(),[
+            
+            'has_specialneeds'=>'required|in:yes,no',
+            'risk_of_falling'=>'required|in:yes,no',
+            'mobility_support'=>'required',
+            'need_splints_orthotics'=>'required|in:yes,no',
+            'need_hand_over_hand'=>'required|in:yes,no',
+            'weight'=>'required|numeric',
+            'need_toiletting_assisstance'=>'required|in:yes,no',
+            'need_eating_assisstance'=>'required|in:yes,no',
+            'need_communication_assisstance'=>'required|in:yes,no',
+            'communication_means'=>'required',
             'overwhelm_noise'=>'required|in:yes,no',
             'overwhelm_people'=>'required|in:yes,no',
             'leaves_group'=>'required|in:yes,no',
             'harm_others'=>'required|in:yes,no',
             'harm_self'=>'required|in:yes,no',
             'successful_participation'=>'required|in:yes,no',
-            'trigger'=>'required',
-            'major_change'=>'required',
-            'activities'=>'required',
+            'communicates_yes'=>'required',
+            'communicates_no'=>'required'
 
         ]);
 
+        $v->sometimes('diagnosis','required',function ($input){
+            return $input->has_specialneeds=='yes';
+        });
+
         $v->sometimes('orthotics_when','required',function ($input){
-            return $input->requires_orthotics=='yes';
+            return $input->need_splints_orthotics=='yes';
         });
 
         $v->sometimes('toiletting_details','required',function ($input){
-            return $input->toiletting_assisstance=='yes';
+            return $input->need_toiletting_assisstance=='yes';
         });
 
         $v->sometimes('eating_details','required',function ($input){
-            return $input->eating_assisstance=='yes';
+            return $input->need_eating_assisstance=='yes';
         });
+
+        // $v->sometimes('communicates_yes','required',function ($input){
+        //     return $input->communication_means!='verbally';
+        // });
+
+        // $v->sometimes('communicates_no','required',function ($input){
+        //     return $input->communication_means!='verbally';
+        // });
 
         if($v->fails()){
             return redirect()->back()->withErrors($v)->withInput();
         }
         
-        $special_need=new SpecialNeed(Input::all());
-        $special_need->child_id=$childId;
-        $special_need->save();
+        
+        //store input into session
+        
+        session(['special_need'=> $request->except('_token')]);
+        //session()->flash('special_need',$request->except('_token'));  
 
+//dd(session('special_need'));
+
+        // $special_need=new SpecialNeed(Input::all());
+        // $special_need->child_id=$childId;
+        // $special_need->save();
+        $childId=session('id');
         return redirect('/child/'.$childId.'/painmanagement/create');
     }
 
@@ -125,7 +154,7 @@ class ChildSpecialNeedController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified special need in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -147,42 +176,54 @@ class ChildSpecialNeedController extends Controller
             App::abort(403, 'Unauthorized action.');
         }
 
+        $request['communication_means']= implode(',', $request['communication_means']);
+       
         $v=Validator::make($request->all(),[
-            'requires_orthotics'=>'required|in:yes,no',
-            'mobility_support'=>'required',
+            
+            'has_specialneeds'=>'required|in:yes,no',
             'risk_of_falling'=>'required|in:yes,no',
-            'hand_over_hand_assisstance'=>'required|in:yes,no',
-            'toiletting_assisstance'=>'required|in:yes,no',
-            'eating_assisstance'=>'required|in:yes,no',
-            'communication_assisstance'=>'required|in:yes,no',
-            'communication_means'=>'required|in:verbally,gestures,device,pictures',
-            'communicates_yes'=>'required',
-            'communicates_no'=>'required',
+            'mobility_support'=>'required',
+            'need_splints_orthotics'=>'required|in:yes,no',
+            'need_hand_over_hand'=>'required|in:yes,no',
             'weight'=>'required|numeric',
-
+            'need_toiletting_assisstance'=>'required|in:yes,no',
+            'need_eating_assisstance'=>'required|in:yes,no',
+            'need_communication_assisstance'=>'required|in:yes,no',
+            'communication_means'=>'required',
             'overwhelm_noise'=>'required|in:yes,no',
             'overwhelm_people'=>'required|in:yes,no',
             'leaves_group'=>'required|in:yes,no',
             'harm_others'=>'required|in:yes,no',
             'harm_self'=>'required|in:yes,no',
             'successful_participation'=>'required|in:yes,no',
-            'trigger'=>'required',
-            'major_change'=>'required',
-            'activities'=>'required',
+            'communicates_yes'=>'required',
+            'communicates_no'=>'required'
 
         ]);
 
+        $v->sometimes('diagnosis','required',function ($input){
+            return $input->has_specialneeds=='yes';
+        });
+
         $v->sometimes('orthotics_when','required',function ($input){
-            return $input->requires_orthotics=='yes';
+            return $input->need_splints_orthotics=='yes';
         });
 
         $v->sometimes('toiletting_details','required',function ($input){
-            return $input->toiletting_assisstance=='yes';
+            return $input->need_toiletting_assisstance=='yes';
         });
 
         $v->sometimes('eating_details','required',function ($input){
-            return $input->eating_assisstance=='yes';
+            return $input->need_eating_assisstance=='yes';
         });
+
+        // $v->sometimes('communicates_yes','required',function ($input){
+        //     return $input->communication_means!='verbally';
+        // });
+
+        // $v->sometimes('communicates_no','required',function ($input){
+        //     return $input->communication_means!='verbally';
+        // });
 
         if($v->fails()){
             //return Json with validation failure

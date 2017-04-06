@@ -3,10 +3,13 @@
 @section('content')
 <div class="container">
 	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
+		
 
 			<h1 class="text-center">Program Information</h1>
-			
+        <div class="col-md-10 col-md-offset-1">
+            @include('admin.backinclude')
+        </div>
+		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				<div class="panel-heading">Enter Information for New Program</div>
 				<div class="panel-body">
@@ -47,8 +50,8 @@
                             </div>
                         </div>
                         
-                        <div class="form-group{{ $errors->has('min_age') ? ' has-error' : '' }} ">
-                          <label for="min_age" class="col-xs-12">Maximum Age:</label>
+                        <div class="form-group{{ $errors->has('max_age') ? ' has-error' : '' }} ">
+                          <label for="max_age" class="col-xs-12">Maximum Age:</label>
                             <div class="col-xs-12">
                               <input type="number" class="form-control" id="max_age" name="max_age">
                                 @if ($errors->has('max_age'))

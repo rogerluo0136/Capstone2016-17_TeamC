@@ -12,31 +12,34 @@ use App\Child as Child;
 use App\Transaction as Transaction;
 use App\ChildProgramSeason as ChildProgramSeason;
 use App\ProgramSeason as ProgramSeason;
+use Excel;
 
 class TransactionController extends Controller
-{
+{   
+    
+    
     /**
-     * Display a listing of the resource.
+     * Display a listing of the transactions.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        return view('admin.transactionExport');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new transaction.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return view('admin.transaction');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created transaction in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -231,7 +234,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified transaction.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -242,7 +245,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified transaction.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -253,7 +256,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified transaction in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -427,13 +430,21 @@ class TransactionController extends Controller
      */
     public function balance($cps_id){
         //retrieve the childProgramSeason (cps), fail if non-existant
-        $cps=ChildProgramSeason::with('transactions','programSeason','programSeason.program','programSeason.season')->findOrFail($cps_id);
-        
+        $cps = ChildProgramSeason::findOrFail($cps_id);
+        if($cps->program_season_id !=0){
+            $cps=ChildProgramSeason::with('transactions','programSeason','programSeason.program','programSeason.season')->findOrFail($cps_id);
+        }
+
         //sum up all the amount the user has paid for the particular cps
         $amount_paid=$cps->transactions()->sum('amount');
         
         //if there is no balance due, redirect the user back home
-        $balance=$cps->programSeason->cost-$amount_paid;
+        if($cps->program_season_id !=0){
+            $balance=$cps->programSeason->cost-$amount_paid;
+        }
+        else{
+            $balance=80-$amount_paid;
+        }
         if($balance<=0){
             return redirect('/home');
         }
@@ -441,5 +452,45 @@ class TransactionController extends Controller
         return view('settle',compact('cps','balance'));
     }
     
+    
+    /**
+     * show a form to input details of transactions to be exported
+     * 
+     * @return view()
+     */
+    public function exporter()
+    {
+        dd("works");
+        return view('admin.transactionExport');
+    }
+    
+    /**
+     * Export the transactions to the user
+     * 
+     * @param Request $request
+     * @return Excel Sheet
+     */
+    public function exportTransaction(Request $request){
+        
+        $start=$request->input("start");
+        $end=$request->input("end");
+
+        $transactions=Transaction::where([
+            ['created_at','>=',$start],
+            ['created_at','<=',$end]
+        ])->get();
+        
+        $transactions_array=$transactions->toArray();
+        
+        $excel_create=Excel::create('Filename', function($excel) use($transactions_array) {
+                
+            $excel->sheet('Sheet', function($sheet) use($transactions_array) {
+    
+                  $sheet->fromArray($transactions_array);
+            
+            });
+        })->download('xlsx');
+    
+    }
     
 }

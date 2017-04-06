@@ -11,17 +11,22 @@ use Auth;
 class ProgramController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the programs.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        if(Auth::user()->type!='admin'){
+            abort(403, 'Unauthorized Access');
+        }
+        $programs=Program::all();
+        
+        return view('admin.programIndex',compact('programs')); 
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new programs.
      *
      * @return \Illuminate\Http\Response
      */
@@ -34,7 +39,7 @@ class ProgramController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created programs in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -61,7 +66,7 @@ class ProgramController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified programs.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -72,7 +77,7 @@ class ProgramController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified programs.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -83,7 +88,7 @@ class ProgramController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified programs in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -91,11 +96,24 @@ class ProgramController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if(Auth::user()->type!='admin'){
+            abort(403,"Unauthorized access");
+        }
+        
+        $this->validate($request,[
+            'name'=>'required',
+            'category'=>'required|in:Music,Art',
+            'min_age'=>'required|numeric',
+            'max_age'=>'required|numeric',
+            'type'=>'required|in:Individual,Group',
+            'months_since_checkup'=>'integer'
+        ]);
+        
+        Program::where('id',$id)->update($request->all());
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified programs from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -103,5 +121,21 @@ class ProgramController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    /**
+     * display the form to edit the program information
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateView($id)
+    {   
+        if(Auth::user()->type!='admin'){
+            abort(403,"Unauthorized");
+        }
+        
+        $program=Program::findOrFail($id);
+        return view('admin.programUpdate',compact('program'));
     }
 }

@@ -14,13 +14,12 @@ class CreateAllergiesTable extends Migration
     {
         Schema::create('allergies', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('is_allergic');
-            $table->string('allergy')->nullable();
-            $table->string('symptoms')->nullable();;
-            $table->string('treatment')->nullable();
-            $table->string('medication')->nullable();
-
             $table->integer('child_id')->unsigned();
+            $table->string('has_allergy');
+            $table->string('allergy_type_symptom')->nullable();
+            $table->string('allergy_explaination')->nullable();
+            $table->string('has_medication');
+            $table->string('medication_explaination')->nullable();
             $table->timestamps();
         });
     }

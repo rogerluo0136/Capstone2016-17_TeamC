@@ -9,7 +9,9 @@
         "laravel/framework": "5.2.*",
         "laravel/cashier": "^6.0",
         "stripe/stripe-php": "^3.10",
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "maatwebsite/excel": "~2.1.0",
+        "f2m2/apidocs": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

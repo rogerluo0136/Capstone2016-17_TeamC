@@ -10,9 +10,9 @@ class Child extends Model
 	public $table = "childs";
 
 	protected $fillable = [
-        'name', 'dob', 'gender','health_card','fam_physician_name','fam_physician_phone','languages','lives_with'
+        'first_name', 'last_name','dob','health_card','family_physician','fam_physician_phone','is_client','is_first_time','department','previous_program','user_id'
     ];
-    
+
     protected $dates=[
         'created_at','updated_at','dob'
     ];
@@ -22,9 +22,9 @@ class Child extends Model
     	return $this->belongsTo('App\User');
     }
 
-    public function emergencyContact()
+    public function contact()
     {
-    	return $this->hasOne('App\EmergencyContact');
+    	return $this->hasOne('App\contact');
     }
 
     public function allergy()
@@ -55,5 +55,10 @@ class Child extends Model
     public function childProgramSeason(){
         return $this->hasMany('App\ChildProgramSeason');
     }
+
+    public function musicAssessment(){
+        return $this->hasMany('App\MusicAssessment');
+    }
+    
 
 }

@@ -19,6 +19,9 @@ class CreateProgramsTable extends Migration
             $table->integer('min_age');
             $table->integer('max_age');
             $table->string('type');//group or individual
+            $table->string('description');
+            $table->integer('months_since_checkup')->unsigned()->nullable();
+            $table->integer('min_assessment_date')->unsigned()->nullable();//max months since last checkup
             $table->timestamps();
         });
     }

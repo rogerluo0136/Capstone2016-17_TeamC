@@ -3,10 +3,14 @@
 @section('content')
 <div class="container">
 	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
+        <h1 class="text-center">Season Information</h1>
 
-			<h1 class="text-center">Season Information</h1>
-			
+        <div class="col-md-10 col-md-offset-1">
+            @include('admin.backinclude')
+        </div>
+
+		<div class="col-md-8 col-md-offset-2">
+	
 			<div class="panel panel-default">
 				<div class="panel-heading">Enter Information for New Season</div>
 				<div class="panel-body">
@@ -17,10 +21,10 @@
                           <label for="season" class="col-xs-12">Select season name:</label>
                           <div class="col-xs-12">
                               <select class="form-control " id="season" name="season">
-                                <option>Fall</option>
-                                <option>Winter</option>
-                                <option>Spring</option>
-                                <option>Summer</option>
+                                <option value="Fall">Fall</option>
+                                <option value="Winter">Winter</option>
+                                <option value="Spring">Spring</option>
+                                <option value="Summer">Summer</option>
                               </select>
                           </div>
                         </div>

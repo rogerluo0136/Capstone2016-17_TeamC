@@ -20,6 +20,9 @@ class CreatePorgramSeasonTable extends Migration
             $table->integer('size')->unsigned();//the size of the program being run in the season.
             $table->string('status')->default('on');//on implies thats its not cancelled, off implies that it is cancelled.
             $table->timestamps();
+            $table->float('minimum_amount');
+            $table->string('schedule');
+            $table->string('payment_method')->nullable();
 
             //we need to make a schedule table
         });

@@ -14,16 +14,15 @@ class CreatePainManagementsTable extends Migration
     {
         Schema::create('pain_managements', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('child_id')->unsigned();
             $table->string('experiences_seizures');
             $table->date('last_seizure')->nullable();
-            $table->string('seizure_frequency')->nullable();
-            $table->string('seizure_trigger')->nullable();
-            $table->string('seizure_medication')->nullable();
+            $table->string('seizure_details')->nullable();
+            $table->string('seizure_medication');
             $table->string('pain_indication');
             $table->string('pain_alleviation');
             $table->string('pain_requirements')->nullable();
-            $table->integer('child_id')->unsigned();
-
+            $table->string('requirement_other_details')->nullable();
             $table->timestamps();
         });
     }

@@ -25,55 +25,76 @@ class ChildAllergyController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new allergy.
      *
      * @return \Illuminate\Http\Response
      */
     public function create($childId)
     {
-        $flag=Auth::user()->childs()->where('id',$childId)->exists();
+        //old flag
+        //$flag=Auth::user()->childs()->where('id',$childId)->exists();
+
+        $flag= session('id')!=null ;
+
 
         if(!$flag){
             App::abort(403,'Unauthorized action');
         }
-        $child=Child::findOrFail($childId);
+        $child=Child::findOrFail((int)$childId-1);
 
         return view('child.allergy',compact('child'));
 
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created allergy in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request,$childId)
     {   
+        //format validator
+        session(['allergy' => $request->except('_token')]);
+        
 
-        $v=Validator::make($request->all(),[
-            'is_allergic'=>'required|in:yes,no'
+        $validator=Validator::make($request->all(),[
+            'has_allergy'=>'required|in:yes,no',
+            'has_medication'=>'required|in:yes,no',
         ]);
 
-        $v->sometimes(['allergy','symptoms','treatment'],'required',function($input){
-            return $input->is_allergic=='yes';
+        $validator->sometimes(['allergy_type_symptom','allergy_explaination'],'required|max:30000',function($input){
+            return $input->has_allergy=='yes';
         });
 
-        if($v->fails()){
-            return redirect()->back()->withErrors($v)->withInput();
+        $validator->sometimes('medication_explaination','required|max:30000',function($input){
+            return $input->has_medication=='yes';
+        });
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        //old flag
+        //$flag=Auth::user()->childs()->where('id',$childId)->exists();
 
-        $flag=Auth::user()->childs()->where('id',$childId)->exists();
+        $flag= session('id')!=null ;
         if(!$flag){
             App::abort(403, 'Unauthorized action.');
         }
 
+        //store input into session
+        session(['allergy' => $request->except('_token')]);
+        //session()->flash('allergy',$request->except('_token'));  
+//dd(session('child'));
 
-        $allergy=new Allergy(Input::all());
-        $allergy->child_id=$childId;
-        $allergy->save();
+        //create new instance in database
+        // $allergy=new Allergy(Input::all());
+        // $allergy->child_id=$childId;
+        // $allergy->save();
 
+        //redirect to specialneed page
+        $childId=session('id');
         return redirect('child/'.$childId.'/specialneed/create');
     }
 
@@ -100,7 +121,7 @@ class ChildAllergyController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified allergy in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -125,18 +146,23 @@ class ChildAllergyController extends Controller
 
         //validate the update before updating
         //the database
-        $v=Validator::make($request->all(),[
-            'is_allergic'=>'required|in:yes,no'
+        $validator=Validator::make($request->all(),[
+            'has_allergy'=>'required|in:yes,no',
+            'has_medication'=>'required|in:yes,no',
         ]);
 
-        $v->sometimes(['allergy','symptoms','treatment'],'required',function($input){
-            return $input->is_allergic=='yes';
+        $validator->sometimes(['allergy_type_symptom','allergy_explaination'],'required|max:30000',function($input){
+            return $input->has_allergy=='yes';
         });
 
-        if($v->fails()){
+        $validator->sometimes('medication_explaination','required|max:30000',function($input){
+            return $input->has_medication=='yes';
+        });
+
+        if($validator->fails()){
             //return Json with validation failure
             return response()->json(
-                 $v->getMessageBag(), 422); // 400 being the HTTP code for an invalid request.
+                 $validator->getMessageBag(), 422); // 400 being the HTTP code for an invalid request.
         }
 
         //update the record in the database
